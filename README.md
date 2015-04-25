@@ -22,7 +22,7 @@ well as execute chosen 'Hello, Home' action.
 * Smart Alarm can send you push notifications and text messages when it's
 armed, disarmed or when an alarm is triggered.
 * Voice notifications are available with compatible audio devices, e.g.
-[VLC Thing](https://github.com/statusbits/smartthings-vlc)
+[VLC Thing](https://github.com/statusbits/smartthings/tree/master/vlc_thing)
 * Silent mode disables sirens and switches, but leaves push notifications
 and text messages on.
 
@@ -135,7 +135,8 @@ used.
 **Version 2.1.0. Released 2014-11-04**
 * Added voice notifications using devices with 'Speech Synthesis' capability.
 Currently, implemented only in the
-[VLC Thing](https://github.com/statusbits/smartthings-vlc), as far as I know.
+[VLC Thing](https://github.com/statusbits/smartthings/tree/master/vlc_thing),
+as far as I know.
 * New notification options. You can now select notification options for alarm
 notifications and status change separately.
 * Increased the number for telephone numbers used for SMS notifications from
