@@ -54,6 +54,7 @@ preferences {
     page name:"pageAlarmOptions"
     page name:"pageNotifications"
     page name:"pageVoiceOptions"
+    page name:"pageRemoteOptions"
     page name:"pageRestApiOptions"
 }
 
@@ -135,6 +136,7 @@ def pageSetup() {
             href "pageAlarmOptions", title:"Alarm Options", description:"Tap to open"
             href "pageNotifications", title:"Notification Options", description:"Tap to open"
             href "pageVoiceOptions", title:"Voice Notification Options", description:"Tap to open"
+            href "pageRemoteOptions", title:"Remote Control Options", description:"Tap to open"
             href "pageRestApiOptions", title:"REST API Options", description:"Tap to open"
             href "pageAbout", title:"About Smart Alarm", description:"Tap to open"
         }
@@ -491,9 +493,7 @@ def pageArmingOptions() {
     LOG("pageArmingOptions()")
 
     def helpArming =
-        "Smart Alarm can be armed and disarmed either by setting the home " +
-        "'Mode' or using any compatible remote control, for example Aeon " +
-        "Labs Minimote.\n\n" +
+        "Smart Alarm can be armed and disarmed by setting the home Mode. " +
         "There are two arming modes - Stay and Away. Interior zones are " +
         "not armed in Stay mode, allowing you to move freely inside your " +
         "home."
@@ -528,74 +528,6 @@ def pageArmingOptions() {
         required:   false
     ]
 
-    def inputRemotes = [
-        name:       "remotes",
-        type:       "capability.button",
-        title:      "Which remote controls?",
-        multiple:   true,
-        required:   false
-    ]
-
-    def inputArmAwayButton = [
-        name:       "buttonArmAway",
-        type:       "number",
-        title:      "Which button to arm 'Away'?",
-        required:   false
-    ]
-
-    def inputArmAwayHold = [
-        name:       "holdArmAway",
-        type:       "bool",
-        title:      "Hold button to arm 'Away'",
-        defaultValue: false,
-        required:   true
-    ]
-
-    def inputArmStayButton = [
-        name:       "buttonArmStay",
-        type:       "number",
-        title:      "Which button to arm 'Stay'?",
-        required:    false
-    ]
-
-    def inputArmStayHold = [
-        name:       "holdArmStay",
-        type:       "bool",
-        title:      "Hold button to arm 'Stay'",
-        defaultValue: false,
-        required:   true
-    ]
-
-    def inputDisarmButton = [
-        name:       "buttonDisarm",
-        type:       "number",
-        title:      "Which button to disarm?",
-        required:   false
-    ]
-
-    def inputDisarmHold = [
-        name:       "holdDisarm",
-        type:       "bool",
-        title:      "Hold button to disarm",
-        defaultValue: false,
-        required:   true
-    ]
-
-    def inputPanicButton = [
-        name:       "buttonPanic",
-        type:       "number",
-        title:      "Which button to panic?",
-        required:   false
-    ]
-
-    def inputPanicHold = [
-        name:       "holdPanic",
-        type:       "bool",
-        title:      "Hold button to panic",
-        defaultValue: false,
-        required:   true
-    ]
-
     def inputDelay = [
         name:       "delay",
         type:       "enum",
@@ -608,7 +540,7 @@ def pageArmingOptions() {
     def inputDelayStay = [
         name:       "stayDelayOff",
         type:       "bool",
-        title:      "Disable delay in Stay mode",
+        title:      "Disable delays in Stay mode",
         defaultValue: false,
         required:   true
     ]
@@ -629,18 +561,6 @@ def pageArmingOptions() {
             input inputAwayModes
             input inputStayModes
             input inputDisarmModes
-        }
-
-        section("Remote Control Options") {
-            input inputRemotes
-            input inputArmAwayButton
-            input inputArmAwayHold
-            input inputArmStayButton
-            input inputArmStayHold
-            input inputDisarmButton
-            input inputDisarmHold
-            input inputPanicButton
-            input inputPanicHold
         }
 
         section("Exit and Entry Delay") {
@@ -968,6 +888,117 @@ def pageVoiceOptions() {
             input inputSpeechTextArmedAway
             input inputSpeechTextArmedStay
             input inputSpeechTextDisarmed
+        }
+    }
+}
+
+// Show "Remote Control Options" page
+def pageRemoteOptions() {
+    LOG("pageRemoteOptions()")
+
+    def helpRemote =
+        "You can arm and disarm Smart Alarm using any compatible remote " +
+        "control, for example Aeon Labs Minimote."
+
+    def inputRemotes = [
+        name:       "remotes",
+        type:       "capability.button",
+        title:      "Which remote controls?",
+        multiple:   true,
+        required:   false
+    ]
+
+    def inputArmAwayButton = [
+        name:       "buttonArmAway",
+        type:       "number",
+        title:      "Which button?",
+        required:   false
+    ]
+
+    def inputArmAwayHold = [
+        name:       "holdArmAway",
+        type:       "bool",
+        title:      "Hold to activate",
+        defaultValue: false,
+        required:   true
+    ]
+
+    def inputArmStayButton = [
+        name:       "buttonArmStay",
+        type:       "number",
+        title:      "Which button?",
+        required:    false
+    ]
+
+    def inputArmStayHold = [
+        name:       "holdArmStay",
+        type:       "bool",
+        title:      "Hold to activate",
+        defaultValue: false,
+        required:   true
+    ]
+
+    def inputDisarmButton = [
+        name:       "buttonDisarm",
+        type:       "number",
+        title:      "Which button?",
+        required:   false
+    ]
+
+    def inputDisarmHold = [
+        name:       "holdDisarm",
+        type:       "bool",
+        title:      "Hold to activate",
+        defaultValue: false,
+        required:   true
+    ]
+
+    def inputPanicButton = [
+        name:       "buttonPanic",
+        type:       "number",
+        title:      "Which button?",
+        required:   false
+    ]
+
+    def inputPanicHold = [
+        name:       "holdPanic",
+        type:       "bool",
+        title:      "Hold to activate",
+        defaultValue: false,
+        required:   true
+    ]
+
+    def pageProperties = [
+        name:       "pageRemoteOptions",
+        title:      "Remote Control Options",
+        nextPage:   "pageSetup",
+        uninstall:  false
+    ]
+
+    return dynamicPage(pageProperties) {
+        section {
+            paragraph helpRemote
+            input inputRemotes
+        }
+
+        section("Arm Away Button") {
+            input inputArmAwayButton
+            input inputArmAwayHold
+        }
+
+        section("Arm Stay Button") {
+            input inputArmStayButton
+            input inputArmStayHold
+        }
+
+        section("Disarm Button") {
+            input inputDisarmButton
+            input inputDisarmHold
+        }
+
+        section("Panic Button") {
+            input inputPanicButton
+            input inputPanicHold
         }
     }
 }
