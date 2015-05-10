@@ -49,7 +49,6 @@ preferences {
     page name:"pageHistory"
     page name:"pageSelectZones"
     page name:"pageConfigureZones"
-    page name:"pageZoneOptions"
     page name:"pageArmingOptions"
     page name:"pageAlarmOptions"
     page name:"pageNotifications"
@@ -116,10 +115,12 @@ def pageSetup() {
 
     return dynamicPage(pageProperties) {
         section("Status") {
-            if (state.zones.size() == 0) {
-                paragraph alarmStatus
-            } else {
+            if (state.zones.size() > 0) {
                 href "pageStatus", title:alarmStatus, description:"Tap for more information"
+            } else {
+                paragraph alarmStatus
+            }
+            if (state.history.size() > 0) {
                 href "pageHistory", title:"Event History", description:"Tap to view"
             }
         }
@@ -154,7 +155,7 @@ def pageAbout() {
         style:      "embedded",
         title:      "Tap here for more information...",
         description:"http://statusbits.github.io/smartalarm/",
-        required:   false,
+        required:   false
     ]
 
     def pageProperties = [
@@ -191,7 +192,7 @@ def pageUninstall() {
         title:      "Warning!",
         nextPage:   null,
         uninstall:  true,
-        install:    false,
+        install:    false
     ]
 
     return dynamicPage(pageProperties) {
@@ -207,7 +208,7 @@ def pageStatus() {
 
     def pageProperties = [
         name:       "pageStatus",
-        title:      "Status",
+        //title:      "Status",
         nextPage:   "pageSetup",
         uninstall:  false
     ]
@@ -280,7 +281,7 @@ def pageHistory() {
 
     def pageProperties = [
         name:       "pageHistory",
-        title:      "Event History",
+        //title:      "Event History",
         nextPage:   "pageSetup",
         uninstall:  false
     ]
@@ -288,13 +289,11 @@ def pageHistory() {
     def history = atomicState.history
 
     return dynamicPage(pageProperties) {
-        if (history.size() == 0) {
-            section {
+        section("Event History") {
+            if (history.size() == 0) {
                 paragraph "No history available."
-            }        
-        } else {
-            section {
-                paragraph "Blah-blah-blah"
+            } else {
+                paragraph "Not implemented"
             }
         }
     }
@@ -351,13 +350,13 @@ def pageSelectZones() {
 
     def pageProperties = [
         name:       "pageSelectZones",
-        title:      "Add/Remove Zones",
+        //title:      "Add/Remove Zones",
         nextPage:   "pageConfigureZones",
         uninstall:  false
     ]
 
     return dynamicPage(pageProperties) {
-        section {
+        section("Add/Remove Zones") {
             paragraph helpPage
             input inputContact
             input inputMotion
@@ -372,116 +371,164 @@ def pageSelectZones() {
 def pageConfigureZones() {
     LOG("pageConfigureZones()")
 
+    def helpZones =
+        "Security zones can be configured as either Exterior, Interior, " +
+        "Alert or Bypass. Exterior zones are armed in both Away and Stay " +
+        "modes, while Interior zones are armed only in Away mode, allowing " +
+        "you to move freely inside the premises while the alarm is armed " +
+        "in Stay mode. Alert zones are always armed and are typically used " +
+        "for smoke and flood alarms. Bypass zones are never armed. This " +
+        "allows you to temporarily exclude a zone from your security " +
+        "system.\n\n" +
+        "You can disable Entry and Exit Delays for individual zones."
+
+    def zoneTypes = ["exterior", "interior", "alert", "bypass"]
+
     def pageProperties = [
         name:       "pageConfigureZones",
-        title:      "Configure Zones",
+        //title:      "Configure Zones",
         nextPage:   "pageSetup",
         uninstall:  false
     ]
 
     return dynamicPage(pageProperties) {
+        section("Configure Zones") {
+            paragraph helpZones
+        }
+
         if (settings.z_contact) {
             def devices = settings.z_contact.sort {it.displayName}
-            section("Contact Sensors") {
-                devices.each() {
-                    href "pageZoneOptions", params:[deviceId:it.id, sensorType:"contact"],
-                        title:it.displayName, description:"Tap to open"
+            devices.each() {
+                def inputZoneType = [
+                    name:       "type_${it.id}",
+                    type:       "enum",
+                    title:      "Zone Type",
+                    metadata:   [values: zoneTypes],
+                    defaultValue: "exterior",
+                    required:   true
+                ]
+
+                def inputZoneDelay = [
+                    name:       "delay_${it.id}",
+                    type:       "bool",
+                    title:      "Entry/Exit Delays",
+                    defaultValue: "true",
+                    required:   true
+                ]
+
+                section("${it.displayName} (contact)") {
+                    input inputZoneType
+                    input inputZoneDelay
                 }
             }
         }
 
         if (settings.z_motion) {
             def devices = settings.z_motion.sort {it.displayName}
-            section("Motion Sensors") {
-                devices.each() {
-                    href "pageZoneOptions", params:[deviceId:it.id, sensorType:"motion"],
-                        title:it.displayName, description:"Tap to open"
+            devices.each() {
+                def inputZoneType = [
+                    name:       "type_${it.id}",
+                    type:       "enum",
+                    title:      "Zone Type",
+                    metadata:   [values: zoneTypes],
+                    defaultValue: "interior",
+                    required:   true
+                ]
+
+                def inputZoneDelay = [
+                    name:       "delay_${it.id}",
+                    type:       "bool",
+                    title:      "Entry/Exit Delays",
+                    defaultValue: "true",
+                    required:   true
+                ]
+
+                section("${it.displayName} (motion)") {
+                    input inputZoneType
+                    input inputZoneDelay
                 }
             }
         }
 
         if (settings.z_movement) {
             def devices = settings.z_movement.sort {it.displayName}
-            section("Movement Sensors") {
-                devices.each() {
-                    href "pageZoneOptions", params:[deviceId:it.id, sensorType:"movement"],
-                        title:it.displayName, description:"Tap to open"
+            devices.each() {
+                def inputZoneType = [
+                    name:       "type_${it.id}",
+                    type:       "enum",
+                    title:      "Zone Type",
+                    metadata:   [values: zoneTypes],
+                    defaultValue: "interior",
+                    required:   true
+                ]
+
+                def inputZoneDelay = [
+                    name:       "delay_${it.id}",
+                    type:       "bool",
+                    title:      "Entry/Exit Delays",
+                    defaultValue: "true",
+                    required:   true
+                ]
+
+                section("${it.displayName} (movement)") {
+                    input inputZoneType
+                    input inputZoneDelay
                 }
             }
         }
 
         if (settings.z_smoke) {
             def devices = settings.z_smoke.sort {it.displayName}
-            section("Smoke & CO Sensors") {
-                devices.each() {
-                    href "pageZoneOptions", params:[deviceId:it.id, sensorType:"smoke"],
-                        title:it.displayName, description:"Tap to open"
+            devices.each() {
+                def inputZoneType = [
+                    name:       "type_${it.id}",
+                    type:       "enum",
+                    title:      "Zone Type",
+                    metadata:   [values: zoneTypes],
+                    defaultValue: "alert",
+                    required:   true
+                ]
+
+                def inputZoneDelay = [
+                    name:       "delay_${it.id}",
+                    type:       "bool",
+                    title:      "Entry/Exit Delays",
+                    defaultValue: "false",
+                    required:   true
+                ]
+
+                section("${it.displayName} (smoke)") {
+                    input inputZoneType
+                    input inputZoneDelay
                 }
             }
         }
 
         if (settings.z_water) {
             def devices = settings.z_water.sort {it.displayName}
-            section("Moisture Sensors") {
-                devices.each() {
-                    href "pageZoneOptions", params:[deviceId:it.id, sensorType:"water"],
-                        title:it.displayName, description:"Tap to open"
+            devices.each() {
+                def inputZoneType = [
+                    name:       "type_${it.id}",
+                    type:       "enum",
+                    title:      "Zone Type",
+                    metadata:   [values: zoneTypes],
+                    defaultValue: "alert",
+                    required:   true
+                ]
+
+                def inputZoneDelay = [
+                    name:       "delay_${it.id}",
+                    type:       "bool",
+                    title:      "Entry/Exit Delays",
+                    defaultValue: "false",
+                    required:   true
+                ]
+
+                section("${it.displayName} (moisture)") {
+                    input inputZoneType
+                    input inputZoneDelay
                 }
             }
-        }
-    }
-}
-
-// Show "Zone Options" page
-def pageZoneOptions(params) {
-    LOG("pageZoneOptions(${params})")
-
-    def device = getDeviceById(params.deviceId, params.sensorType)
-
-    def helpZoneType =
-        "A security zone can be configured as either Exterior, Interior, " +
-        "Alert or Bypass. Exterior zones are armed in both Away and Stay " +
-        "modes, while Interior zones are armed only in Away mode, allowing " +
-        "you to move freely inside the premises while the alarm is armed " +
-        "in Stay mode. Alert zones are always armed and are typically used " +
-        "for smoke and flood alarms. Bypass zones are never armed. This " +
-        "allows you to temporarily exclude a zone from your security system."
-
-    def helpZoneDelay =
-        "You can disable Entry and Exit Delays for individual zones."
-
-    def zoneTypes = ["exterior", "interior", "alert", "bypass"]
-
-    def inputZoneType = [
-        name:       "type_${params.deviceId}",
-        type:       "enum",
-        title:      "Zone Type",
-        metadata:   [values: zoneTypes],
-        defaultValue: "exterior",
-        required:   true
-    ]
-
-    def inputZoneDelay = [
-        name:       "delay_${params.deviceId}",
-        type:       "bool",
-        title:      "Entry/Exit Delays",
-        defaultValue: "true",
-        required:   true
-    ]
-
-    def pageProperties = [
-        name:       "pageZoneOptions",
-        title:      "${device.displayName} Options",
-        nextPage:   "pageConfigureZones",
-        uninstall:  false
-    ]
-
-    return dynamicPage(pageProperties) {
-        section {
-            paragraph helpZoneType
-            input inputZoneType
-            paragraph helpZoneDelay
-            input inputZoneDelay
         }
     }
 }
@@ -545,13 +592,13 @@ def pageArmingOptions() {
 
     def pageProperties = [
         name:       "pageArmingOptions",
-        title:      "Arming/Disarming Options",
+        //title:      "Arming/Disarming Options",
         nextPage:   "pageSetup",
         uninstall:  false
     ]
 
     return dynamicPage(pageProperties) {
-        section {
+        section("Arming/Disarming Options") {
             paragraph helpArming
         }
 
@@ -621,13 +668,13 @@ def pageAlarmOptions() {
 
     def pageProperties = [
         name:       "pageAlarmOptions",
-        title:      "Alarm Options",
+        //title:      "Alarm Options",
         nextPage:   "pageSetup",
         uninstall:  false
     ]
 
     return dynamicPage(pageProperties) {
-        section {
+        section("Alarm Options") {
             paragraph helpAlarm
             input inputAlarms
             input inputSirenMode
@@ -770,13 +817,13 @@ def pageNotifications() {
 
     def pageProperties = [
         name:       "pageNotifications",
-        title:      "Notification Options",
+        //title:      "Notification Options",
         nextPage:   "pageSetup",
         uninstall:  false
     ]
 
     return dynamicPage(pageProperties) {
-        section {
+        section("Notification Options") {
             paragraph helpAbout
         }
         section("Push Notifications") {
@@ -871,13 +918,13 @@ def pageVoiceOptions() {
 
     def pageProperties = [
         name:       "pageNotifications",
-        title:      "Notification Options",
+        //title:      "Voice Notification Options",
         nextPage:   "pageSetup",
         uninstall:  false
     ]
 
     return dynamicPage(pageProperties) {
-        section {
+        section("Voice Notification Options") {
             paragraph helpAbout
             input inputSpeechDevice
             input inputSpeechOnAlarm
@@ -968,13 +1015,13 @@ def pageRemoteOptions() {
 
     def pageProperties = [
         name:       "pageRemoteOptions",
-        title:      "Remote Control Options",
+        //title:      "Remote Control Options",
         nextPage:   "pageSetup",
         uninstall:  false
     ]
 
     return dynamicPage(pageProperties) {
-        section {
+        section("Remote Control Options") {
             paragraph helpRemote
             input inputRemotes
         }
@@ -1041,13 +1088,13 @@ def pageRestApiOptions() {
 
     def pageProperties = [
         name:       "pageRestApiOptions",
-        title:      "REST API Options",
+        //title:      "REST API Options",
         nextPage:   "pageSetup",
         uninstall:  false
     ]
 
     return dynamicPage(pageProperties) {
-        section {
+        section("REST API Options") {
             paragraph textHelp
             input inputRestApi
             paragraph textPincode
