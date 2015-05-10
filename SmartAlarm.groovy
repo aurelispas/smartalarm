@@ -5,7 +5,7 @@
  *  Please visit <http://statusbits.github.io/smartalarm/> for more
  *  information.
  *
- *  Version 2.3.1 (5/9/2015)
+ *  Version 2.3.1 (5/10/2015)
  *
  *  The latest version of this file can be found on GitHub at:
  *  <https://github.com/statusbits/smartalarm/blob/master/SmartAlarm.groovy>
@@ -104,24 +104,18 @@ def pageSetup() {
         return pageSelectZones()
     }
 
-    def alarmStatus = "Smart Alarm is "
-    if (state.armed) {
-        alarmStatus += "ARMED "
-        alarmStatus += state.stay ? "STAY" : "AWAY"
-    } else {
-        alarmStatus += "DISARMED"
-    }
+    def alarmStatus = "Alarm is ${getAlarmStatus()}"
 
     def pageProperties = [
         name:       "pageSetup",
-        title:      "Status",
+        //title:      "Status",
         nextPage:   null,
         install:    true,
         uninstall:  state.installed
     ]
 
     return dynamicPage(pageProperties) {
-        section {
+        section("Status") {
             if (state.zones.size() == 0) {
                 paragraph alarmStatus
             } else {
@@ -165,13 +159,13 @@ def pageAbout() {
 
     def pageProperties = [
         name:       "pageAbout",
-        title:      "About",
+        //title:      "About",
         nextPage:   "pageSetup",
         uninstall:  false
     ]
 
     return dynamicPage(pageProperties) {
-        section {
+        section("About") {
             paragraph textAbout
             href hrefInfo
         }
@@ -186,22 +180,22 @@ def pageUninstall() {
     LOG("pageUninstall()")
 
     def text =
-        "You are upgrading to Smart Alarm version ${getVersion()} that " +
-        "is not backward compatible with the currently installed version. " +
-        "Please uninstall the current version by tapping the Uninstall " +
-        "button below, then re-install Smart Alarm from the Dashboard. " +
-        "We are sorry for the inconvenience."
+        "Smart Alarm version ${getVersion()} is not backward compatible " +
+        "with the currently installed version. Please uninstall the " +
+        "current version by tapping the Uninstall button below, then " +
+        "re-install Smart Alarm from the Dashboard. We are sorry for the " +
+        "inconvenience."
 
     def pageProperties = [
         name:       "pageUninstall",
-        title:      "Uninstall Required",
+        title:      "Warning!",
         nextPage:   null,
         uninstall:  true,
         install:    false,
     ]
 
     return dynamicPage(pageProperties) {
-        section {
+        section("Uninstall Required") {
             paragraph text
         }
     }
@@ -219,6 +213,10 @@ def pageStatus() {
     ]
 
     return dynamicPage(pageProperties) {
+        section("Status") {
+            paragraph "Alarm is ${getAlarmStatus()}"
+        }
+
         if (settings.z_contact) {
             section("Contact Sensors") {
                 settings.z_contact.each() {
@@ -464,10 +462,10 @@ def pageZoneOptions(params) {
     ]
 
     def inputZoneDelay = [
-        name:       "nodelay_${params.deviceId}",
+        name:       "delay_${params.deviceId}",
         type:       "bool",
-        title:      "Disable Entry/Exit Delay",
-        defaultValue: "false",
+        title:      "Entry/Exit Delays",
+        defaultValue: "true",
         required:   true
     ]
 
@@ -1159,7 +1157,7 @@ private def initZones() {
                 deviceId:   it.id,
                 sensorType: "contact",
                 zoneType:   settings["type_${it.id}"] ?: "exterior",
-                nodelay:    settings["nodelay_${it.id}"] ?: false
+                delay:      settings["delay_${it.id}"] ?: true
             ]
         }
         subscribe(settings.z_contact, "contact.open", onContact)
@@ -1171,7 +1169,7 @@ private def initZones() {
                 deviceId:   it.id,
                 sensorType: "motion",
                 zoneType:   settings["type_${it.id}"] ?: "interior",
-                nodelay:    settings["nodelay_${it.id}"] ?: false
+                delay:      settings["delay_${it.id}"] ?: true
             ]
         }
         subscribe(settings.z_motion, "motion.active", onMotion)
@@ -1183,7 +1181,7 @@ private def initZones() {
                 deviceId:   it.id,
                 sensorType: "movement",
                 zoneType:   settings["type_${it.id}"] ?: "interior",
-                nodelay:    settings["nodelay_${it.id}"] ?: false
+                delay:      settings["delay_${it.id}"] ?: true
             ]
         }
         subscribe(settings.z_movement, "acceleration.active", onMovement)
@@ -1195,7 +1193,7 @@ private def initZones() {
                 deviceId:   it.id,
                 sensorType: "smoke",
                 zoneType:   settings["type_${it.id}"] ?: "alert",
-                nodelay:    settings["nodelay_${it.id}"] ?: false
+                delay:      settings["delay_${it.id}"] ?: true
             ]
         }
         subscribe(settings.z_smoke, "smoke.detected", onSmoke)
@@ -1210,7 +1208,7 @@ private def initZones() {
                 deviceId:   it.id,
                 sensorType: "water",
                 zoneType:   settings["type_${it.id}"] ?: "alert",
-                nodelay:    settings["nodelay_${it.id}"] ?: false
+                delay:      settings["delay_${it.id}"] ?: true
             ]
         }
         subscribe(settings.z_water, "water.wet", onWater)
@@ -1301,7 +1299,7 @@ private def onZoneEvent(evt, sensorType) {
 
     if (zone.armed && !state.alarm) {
         state.alarm = evt.displayName
-        if (zone.zoneType == "alert" || zone.nodelay || (state.stay && settings.stayDelayOff)) {
+        if (zone.zoneType == "alert" || !zone.delay || (state.stay && settings.stayDelayOff)) {
             activateAlarm()
         } else {
             myRunIn(state.delay, activateAlarm)
@@ -1427,7 +1425,7 @@ def exitDelayExpired() {
     }
 
     def msg = "${location.name}: all "
-    if (state.stay) {
+    if (stay) {
         msg += "exterior "
     }
     msg += "zones are armed."
@@ -1448,20 +1446,20 @@ private def armPanel(stay) {
     state.zones.each() {
         def zoneType = it.zoneType
         if (zoneType == "exterior") {
-            if (it.nodelay) {
-                it.armed = true
-            } else {
+            if (it.delay) {
                 it.armed = false
                 armDelay = true
+            } else {
+                it.armed = true
             }
         } else if (zoneType == "interior") {
             if (stay) {
                 it.armed = false
-            } else if (it.nodelay) {
-                it.armed = true
-            } else {
+            } else if (it.delay) {
                 it.armed = false
                 armDelay = true
+            } else {
+                it.armed = true
             }
         }
     }
@@ -1748,6 +1746,19 @@ private def getStatusPhrase() {
 private def getHelloHomeActions() {
     def actions = location.helloHome?.getPhrases().collect() { it.label }
     return actions.sort()
+}
+
+private def getAlarmStatus() {
+    def alarmStatus
+
+    if (atomicState.armed) {
+        alarmStatus = "ARMED "
+        alarmStatus += atomicState.stay ? "STAY" : "AWAY"
+    } else {
+        alarmStatus = "DISARMED"
+    }
+
+    return alarmStatus
 }
 
 private def getZoneStatus(device, sensorType) {
