@@ -5,7 +5,7 @@
  *  Please visit <http://statusbits.github.io/smartalarm/> for more
  *  information.
  *
- *  Version 2.3.1 (5/10/2015)
+ *  Version 2.3.2 (5/11/2015)
  *
  *  The latest version of this file can be found on GitHub at:
  *  <https://github.com/statusbits/smartalarm/blob/master/SmartAlarm.groovy>
@@ -31,7 +31,7 @@
 import groovy.json.JsonSlurper
 
 definition(
-    name: "Smart Alarm V2.3",
+    name: "Smart Alarm",
     namespace: "statusbits",
     author: "geko@statusbits.com",
     description: "The ultimate home security application for SmartThings.",
@@ -1913,7 +1913,7 @@ private def mySendPush(msg) {
 }
 
 private def getVersion() {
-    return "2.3.1"
+    return "2.3.2"
 }
 
 private def textCopyright() {
