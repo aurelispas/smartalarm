@@ -5,7 +5,7 @@
  *  Please visit <http://statusbits.github.io/smartalarm/> for more
  *  information.
  *
- *  Version 2.3.2 (5/11/2015)
+ *  Version 2.3.3 (5/16/2015)
  *
  *  The latest version of this file can be found on GitHub at:
  *  <https://github.com/statusbits/smartalarm/blob/master/SmartAlarm.groovy>
@@ -1132,8 +1132,8 @@ private def setupInit() {
     if (state.installed == null) {
         state.installed = false
         state.armed = false
-        state.alarm = null
         state.zones = []
+        state.alarms = []
         state.history = []
     } else {
         def version = state.version as String
@@ -1177,7 +1177,7 @@ private def initialize() {
 private def clearAlarm() {
     LOG("clearAlarm()")
 
-    state.alarm = null
+    state.alarms = []
     settings.alarms*.off()
 
     // Turn off only those switches that we've turned on
@@ -1197,6 +1197,13 @@ private def initZones() {
     LOG("initZones()")
 
     state.zones = []
+
+    state.zones << [
+        deviceId:   null,
+        sensorType: "panic",
+        zoneType:   "alert",
+        delay:      false
+    ]
 
     if (settings.z_contact) {
         settings.z_contact.each() {
@@ -1344,8 +1351,8 @@ private def onZoneEvent(evt, sensorType) {
         return
     }
 
-    if (zone.armed && !state.alarm) {
-        state.alarm = evt.displayName
+    if (zone.armed) {
+        state.alarms << evt.displayName
         if (zone.zoneType == "alert" || !zone.delay || (state.stay && settings.stayDelayOff)) {
             activateAlarm()
         } else {
@@ -1393,9 +1400,7 @@ def onButtonEvent(evt) {
 def armAway() {
     LOG("armAway()")
 
-    def armed = atomicState.armed
-    def stay = atomicState.stay
-    if (!armed || stay) {
+    if (!atomicState.armed || atomicState.stay) {
         armPanel(false)
     }
 }
@@ -1403,9 +1408,7 @@ def armAway() {
 def armStay() {
     LOG("armStay()")
 
-    def armed = atomicState.armed
-    def stay = atomicState.stay
-    if (!armed || !stay) {
+    if (!atomicState.armed || !atomicState.stay) {
         armPanel(true)
     }
 }
@@ -1413,12 +1416,10 @@ def armStay() {
 def disarm() {
     LOG("disarm()")
 
-    def armed = atomicState.armed
-    if (armed) {
+    if (atomicState.armed) {
         state.armed = false
         state.zones.each() {
-            def zoneType = it.zoneType
-            if (zoneType == "exterior" || zoneType == "interior") {
+            if (it.zoneType != "alert") {
                 it.armed = false
             }
         }
@@ -1430,7 +1431,7 @@ def disarm() {
 def panic() {
     LOG("panic()")
 
-    state.alarm = "Panic";
+    state.alarms << "Panic"
     activateAlarm()
 }
 
@@ -1537,11 +1538,9 @@ def apiArmAway() {
         return httpError(403, "Access denied")
     }
 
-    if (settings.pincode && settings.armWithPin) {
-        if (params.pincode != settings.pincode.toString()) {
-            log.error "Invalid PIN code '${params.pincode}'"
-            return httpError(403, "Access denied")
-        }
+    if (settings.pincode && settings.armWithPin && (params.pincode != settings.pincode.toString())) {
+        log.error "Invalid PIN code '${params.pincode}'"
+        return httpError(403, "Access denied")
     }
 
     armAway()
@@ -1557,11 +1556,9 @@ def apiArmStay() {
         return httpError(403, "Access denied")
     }
 
-    if (settings.pincode && settings.armWithPin) {
-        if (params.pincode != settings.pincode.toString()) {
-            log.error "Invalid PIN code '${params.pincode}'"
-            return httpError(403, "Access denied")
-        }
+    if (settings.pincode && settings.armWithPin && (params.pincode != settings.pincode.toString())) {
+        log.error "Invalid PIN code '${params.pincode}'"
+        return httpError(403, "Access denied")
     }
 
     armStay()
@@ -1577,11 +1574,9 @@ def apiDisarm() {
         return httpError(403, "Access denied")
     }
 
-    if (settings.pincode) {
-        if (params.pincode != settings.pincode.toString()) {
-            log.error "Invalid PIN code '${params.pincode}'"
-            return httpError(403, "Access denied")
-        }
+    if (settings.pincode && (params.pincode != settings.pincode.toString())) {
+        log.error "Invalid PIN code '${params.pincode}'"
+        return httpError(403, "Access denied")
     }
 
     disarm()
@@ -1612,7 +1607,7 @@ def apiStatus() {
 
     def status = [
         status: state.armed ? (state.stay ? "armed stay" : "armed away") : "disarmed",
-        alarm:  state.alarm
+        alarms: state.alarms
     ]
 
     return status
@@ -1621,7 +1616,7 @@ def apiStatus() {
 def activateAlarm() {
     LOG("activateAlarm()")
 
-    if (!state.alarm) {
+    if (state.alarms.size() == 0) {
         log.warn "activateAlarm: false alarm"
         return
     }
@@ -1655,7 +1650,11 @@ def activateAlarm() {
         location.helloHome.execute(settings.helloHomeAction)
     }
 
-    def msg = "Alarm at ${location.name}!\n${state.alarm}"
+    def msg = "Alarm at ${location.name}!"
+    state.alarms.each() {
+        msg += "\n${it}"
+    }
+
     notify(msg)
     notifyVoice()
 
@@ -1667,7 +1666,7 @@ private def notify(msg) {
 
     log.info msg
 
-    if (state.alarm) {
+    if (state.alarms.size()) {
         // Alarm notification
         if (settings.pushMessage) {
             mySendPush(msg)
@@ -1693,7 +1692,7 @@ private def notify(msg) {
 
         if (settings.pushbulletAlarm && settings.pushbullet) {
             settings.pushbullet*.push(msg)
-        }    
+        }   
     } else {
         // Status change notification
         if (settings.pushStatusMessage) {
@@ -1732,7 +1731,7 @@ private def notifyVoice() {
     }
 
     def phrase = null
-    if (state.alarm) {
+    if (state.alarms.size()) {
         // Alarm notification
         if (settings.speechOnAlarm) {
             phrase = settings.speechText ?: getStatusPhrase()
@@ -1775,8 +1774,11 @@ private def getStatusPhrase() {
     LOG("getStatusPhrase()")
 
     def phrase = ""
-    if (state.alarm) {
-        phrase = "Alarm in zone ${state.alarm} at ${location.name}!"
+    if (state.alarms.size()) {
+        phrase = "Alarm at ${location.name}!"
+        state.alarms.each() {
+            phrase += " ${it}."
+        }
     } else {
         phrase = "${location.name} security is "
         if (state.armed) {
@@ -1913,7 +1915,7 @@ private def mySendPush(msg) {
 }
 
 private def getVersion() {
-    return "2.3.2"
+    return "2.3.3"
 }
 
 private def textCopyright() {
