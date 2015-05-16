@@ -36,8 +36,8 @@ definition(
     author: "geko@statusbits.com",
     description: "The ultimate home security application for SmartThings.",
     category: "Safety & Security",
-    iconUrl: "https://s3.amazonaws.com/smartapp-icons/SafetyAndSecurity/App-IsItSafe.png",
-    iconX2Url: "https://s3.amazonaws.com/smartapp-icons/SafetyAndSecurity/App-IsItSafe@2x.png",
+    iconUrl: "http://statusbits.github.io/icons/SmartAlarm-128.png",
+    iconX2Url: "http://statusbits.github.io/icons/SmartAlarm-256.png",
     oauth: [displayName:"Smart Alarm", displayLink:"https://github.com/statusbits/smartalarm/"]
 )
 
@@ -304,9 +304,8 @@ def pageSelectZones() {
     LOG("pageSelectZones()")
 
     def helpPage =
-        "A security zone is an area of your property protected by one of " +
-        "the available sensors (contact, motion, movement, moisture or " +
-        "smoke)."
+        "A security zone is an area of your property protected by a sensor " +
+        "(contact, motion, movement, moisture or smoke)."
 
     def inputContact = [
         name:       "z_contact",
