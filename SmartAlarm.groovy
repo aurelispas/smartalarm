@@ -243,7 +243,7 @@ def pageStatus() {
         if (settings.z_movement) {
             section("Movement Sensors") {
                 settings.z_movement.each() {
-                    def text = getZoneStatus(it, "movement")
+                    def text = getZoneStatus(it, "acceleration")
                     if (text) {
                         paragraph text
                     }
@@ -1233,7 +1233,7 @@ private def initZones() {
         settings.z_movement.each() {
             state.zones << [
                 deviceId:   it.id,
-                sensorType: "movement",
+                sensorType: "acceleration",
                 zoneType:   settings["type_${it.id}"] ?: "interior",
                 delay:      settings["delay_${it.id}"] ?: true
             ]
@@ -1338,7 +1338,7 @@ private def isRestApiEnabled() {
 
 def onContact(evt)  { onZoneEvent(evt, "contact") }
 def onMotion(evt)   { onZoneEvent(evt, "motion") }
-def onMovement(evt) { onZoneEvent(evt, "movement") }
+def onMovement(evt) { onZoneEvent(evt, "acceleration") }
 def onSmoke(evt)    { onZoneEvent(evt, "smoke") }
 def onWater(evt)    { onZoneEvent(evt, "water") }
 
@@ -1817,14 +1817,9 @@ private def getZoneStatus(device, sensorType) {
         return null
     }
 
-    def ready = isZoneReady(device, sensorType)
     def str = "${device.displayName}: ${zone.zoneType}, "
-    str += zone.armed ? "Armed, " : "Disarmed, "
-    if (zone.armed) {
-        str += ready ? "Clear" : "Alarm"
-    } else {
-        str += ready ? "Ready" : "Not Ready"
-    }
+    str += zone.armed ? "armed, " : "disarmed, "
+    str += device.currentValue(sensorType)
 
     return str
 }
@@ -1845,7 +1840,7 @@ private def isZoneReady(device, sensorType) {
         ready = "inactive".equals(device.currentValue("motion"))
         break
 
-    case "movement":
+    case "acceleration":
         ready = "inactive".equals(device.currentValue("acceleration"))
         break
 
@@ -1872,7 +1867,7 @@ private def getDeviceById(id, sensorType) {
     case "motion":
         return settings.z_motion?.find() { it.id == id }
 
-    case "movement":
+    case "acceleration":
         return settings.z_movement?.find() { it.id == id }
 
     case "smoke":
