@@ -52,7 +52,6 @@ preferences {
     page name:"pageArmingOptions"
     page name:"pageAlarmOptions"
     page name:"pageNotifications"
-    page name:"pageVoiceOptions"
     page name:"pageRemoteOptions"
     page name:"pageRestApiOptions"
 }
@@ -130,7 +129,6 @@ def pageSetup() {
             href "pageArmingOptions", title:"Arming/Disarming Options", description:"Tap to open"
             href "pageAlarmOptions", title:"Alarm Options", description:"Tap to open"
             href "pageNotifications", title:"Notification Options", description:"Tap to open"
-            href "pageVoiceOptions", title:"Voice Notification Options", description:"Tap to open"
             href "pageRemoteOptions", title:"Remote Control Options", description:"Tap to open"
             href "pageRestApiOptions", title:"REST API Options", description:"Tap to open"
             href "pageAbout", title:"About Smart Alarm", description:"Tap to open"
@@ -627,7 +625,7 @@ def pageAlarmOptions() {
     def inputAlarms = [
         name:           "alarms",
         type:           "capability.alarm",
-        title:          "Activate these sirens",
+        title:          "Which sirens?",
         multiple:       true,
         required:       false
     ]
@@ -643,7 +641,7 @@ def pageAlarmOptions() {
     def inputSwitches = [
         name:           "switches",
         type:           "capability.switch",
-        title:          "Turn on these switches",
+        title:          "Which switches?",
         multiple:       true,
         required:       false
     ]
@@ -651,7 +649,7 @@ def pageAlarmOptions() {
     def inputCameras = [
         name:           "cameras",
         type:           "capability.imageCapture",
-        title:          "Take camera snapshots",
+        title:          "Which cameras?",
         multiple:       true,
         required:       false
     ]
@@ -660,7 +658,7 @@ def pageAlarmOptions() {
     def inputHelloHome = [
         name:           "helloHomeAction",
         type:           "enum",
-        title:          "Execute this Hello Home action",
+        title:          "Which 'Hello, Home' action?",
         metadata:       [values: hhActions],
         required:       false
     ]
@@ -675,10 +673,18 @@ def pageAlarmOptions() {
     return dynamicPage(pageProperties) {
         section("Alarm Options") {
             paragraph helpAlarm
+        }
+        section("Sirens") {
             input inputAlarms
             input inputSirenMode
+        }
+        section("Switches") {
             input inputSwitches
+        }
+        section("Cameras") {
             input inputCameras
+        }
+        section("'Hello, Home' Actions") {
             input inputHelloHome
         }
     }
@@ -691,8 +697,9 @@ def pageNotifications() {
     def helpAbout =
         "You can configure Smart Alarm to notify you when it is armed, " +
         "disarmed or when an alarm is set off. Notifications can be send " +
-        "using either Push messages, SMS (text) messages or Pushbullet " +
-        "messaging service."
+        "using either Push messages, SMS (text) messages and Pushbullet " +
+        "messaging service. Smart Alarm can also notify you with sounds or " +
+        "voice alerts using compatible audio devices, such as Sonos."
 
     def inputPushAlarm = [
         name:           "pushMessage",
@@ -795,7 +802,7 @@ def pageNotifications() {
     def inputPushbulletDevice = [
         name:           "pushbullet",
         type:           "device.pushbullet",
-        title:          "Use these Pushbullet devices",
+        title:          "Which Pushbullet devices?",
         multiple:       true,
         required:       false
     ]
@@ -814,61 +821,10 @@ def pageNotifications() {
         defaultValue:   true
     ]
 
-    def pageProperties = [
-        name:       "pageNotifications",
-        //title:      "Notification Options",
-        nextPage:   "pageSetup",
-        uninstall:  false
-    ]
-
-    return dynamicPage(pageProperties) {
-        section("Notification Options") {
-            paragraph helpAbout
-        }
-        section("Push Notifications") {
-            input inputPushAlarm
-            input inputPushStatus
-        }
-        section("Text Message (SMS) #1") {
-            input inputPhone1
-            input inputPhone1Alarm
-            input inputPhone1Status
-        }
-        section("Text Message (SMS) #2") {
-            input inputPhone2
-            input inputPhone2Alarm
-            input inputPhone2Status
-        }
-        section("Text Message (SMS) #3") {
-            input inputPhone3
-            input inputPhone3Alarm
-            input inputPhone3Status
-        }
-        section("Text Message (SMS) #4") {
-            input inputPhone4
-            input inputPhone4Alarm
-            input inputPhone4Status
-        }
-        section("Pushbullet Notifications") {
-            input inputPushbulletDevice
-            input inputPushbulletAlarm
-            input inputPushbulletStatus
-        }
-    }
-}
-
-// Show "Voice Notification Options" page
-def pageVoiceOptions() {
-    LOG("pageVoiceOptions()")
-
-    def helpAbout =
-        "Smart Alarm can utilize available speech synthesis devices (e.g. " +
-        "VLC Thing) to provide voice notifications."
-
-    def inputSpeechDevice = [
+    def inputAudioPlayers = [
         name:           "audioPlayer",
         type:           "capability.musicPlayer",
-        title:          "Use these text-to-speech devices",
+        title:          "Which audio players?",
         multiple:       true,
         required:       false
     ]
@@ -917,15 +873,46 @@ def pageVoiceOptions() {
 
     def pageProperties = [
         name:       "pageNotifications",
-        //title:      "Voice Notification Options",
+        //title:      "Notification Options",
         nextPage:   "pageSetup",
         uninstall:  false
     ]
 
     return dynamicPage(pageProperties) {
-        section("Voice Notification Options") {
+        section("Notification Options") {
             paragraph helpAbout
-            input inputSpeechDevice
+        }
+        section("Push Notifications") {
+            input inputPushAlarm
+            input inputPushStatus
+        }
+        section("Text Message (SMS) #1") {
+            input inputPhone1
+            input inputPhone1Alarm
+            input inputPhone1Status
+        }
+        section("Text Message (SMS) #2") {
+            input inputPhone2
+            input inputPhone2Alarm
+            input inputPhone2Status
+        }
+        section("Text Message (SMS) #3") {
+            input inputPhone3
+            input inputPhone3Alarm
+            input inputPhone3Status
+        }
+        section("Text Message (SMS) #4") {
+            input inputPhone4
+            input inputPhone4Alarm
+            input inputPhone4Status
+        }
+        section("Pushbullet Notifications") {
+            input inputPushbulletDevice
+            input inputPushbulletAlarm
+            input inputPushbulletStatus
+        }
+        section("Audio Notifications") {
+            input inputAudioPlayers
             input inputSpeechOnAlarm
             input inputSpeechOnStatus
             input inputSpeechTextAlarm
