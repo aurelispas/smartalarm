@@ -866,8 +866,8 @@ def pageVoiceOptions() {
         "VLC Thing) to provide voice notifications."
 
     def inputSpeechDevice = [
-        name:           "speechSynth",
-        type:           "capability.speechSynthesis",
+        name:           "audioPlayer",
+        type:           "capability.musicPlayer",
         title:          "Use these text-to-speech devices",
         multiple:       true,
         required:       false
@@ -1725,7 +1725,7 @@ private def notify(msg) {
 private def notifyVoice() {
     LOG("notifyVoice()")
 
-    if (!settings.speechSynth) {
+    if (!settings.audioPlayer) {
         return
     }
 
@@ -1751,7 +1751,7 @@ private def notifyVoice() {
     }
 
     if (phrase) {
-        settings.speechSynth*.speak(phrase)
+        settings.audioPlayer*.playText(phrase)
     }
 }
 
