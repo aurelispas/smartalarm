@@ -38,7 +38,7 @@ definition(
     category: "Safety & Security",
     iconUrl: "http://statusbits.github.io/icons/SmartAlarm-128.png",
     iconX2Url: "http://statusbits.github.io/icons/SmartAlarm-256.png",
-    oauth: [displayName:"Smart Alarm", displayLink:"https://github.com/statusbits/smartalarm/"]
+    oauth: [displayName:"Smart Alarm", displayLink:"http://statusbits.github.io/smartalarm/"]
 )
 
 preferences {

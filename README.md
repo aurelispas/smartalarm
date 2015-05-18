@@ -10,21 +10,19 @@ for the [SmartThings](http://fbuy.me/bb9pe) home automation system.
 ### Features
 
 * Two arming modes - Away and Stay.
-* Unlimited number of security zones (sensors) - contact, motion, moisture
-or smoke.
+* Unlimited number of security zones (sensors) - contact, motion, movement
+(acceleration), moisture or smoke.
 * Each security zone can be designated as Exterior (armed in both Away and
-Stay modes), Interior (armed in Away mode only), Entrance (same as Exterior,
-but uses entry and exit delays) or Alert (always armed).
-* Optional entry and exit delays for the Entrance zones.
-* Zone bypass allows quickly exclude selected zones.
+Stay modes), Interior (armed in Away mode only), Alert (always armed) or
+Bypass (never armed).
+* Entry and exit delays in both Stay and Away zones. Delays can be optionally
+disabled for each zone.
 * When an alarm is set off, Smart Alarm can turn on sirens and switches as
 well as execute chosen 'Hello, Home' action.
 * Smart Alarm can send you push notifications and text messages when it's
 armed, disarmed or when an alarm is triggered.
 * Voice notifications are available with compatible audio devices, e.g.
 [VLC Thing](https://github.com/statusbits/smartthings/tree/master/vlc_thing)
-* Silent mode disables sirens and switches, but leaves push notifications
-and text messages on.
 
 
 ### Arming and Disarming
@@ -109,6 +107,18 @@ appears below the menu ribbon. Tap it and follow setup instructions.
 
 
 ### Revision History
+
+**Version 2.4.0. Released 2015-05-18**
+* Added movement (acceleration) sensors.
+* Improved remote control button handling (Issues #25 and #27). Button numbers
+are no longer limited to 1..4. You can also use both "Push" and "Hold" button
+actions.
+* Support "strobe" alarm mode (Issue #28). Alarms can now be turned on in
+"siren", "strobe" or "both" modes.
+* Added Sonos support (Issue #30). Smart Alarm now uses "Audio Player" device
+type instead of "Speech Synthesis" for voice notifications.
+* "Entrance" zones are no longer used. Instead, entry and exit delays can now
+be disabled for each individual zone.
 
 **Version 2.2.5. Released 2015-01-03**
 * Take camera snapshots when alarm is triggered.
