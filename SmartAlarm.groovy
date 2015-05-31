@@ -33,7 +33,7 @@ definition(
     name: "Smart Alarm",
     namespace: "statusbits",
     author: "geko@statusbits.com",
-    description: "Verstile home security application for SmartThings.",
+    description: "Verstile home security application for SmartThings. Version 2.4.0.",
     category: "Safety & Security",
     iconUrl: "http://statusbits.github.io/icons/SmartAlarm-128.png",
     iconX2Url: "http://statusbits.github.io/icons/SmartAlarm-256.png",
