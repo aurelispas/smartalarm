@@ -81,29 +81,29 @@ into your web app.
 
 ### Installation
 
-Smart Alarm app is available in the "Safety & Security" section of the Shared
-Smart Apps in [SmartThings IDE](https://graph.api.smartthings.com).
-
-1. Go to "My SmartApps" section and click on the "+ New SmartApp" button on the
-right.
-2. On the "New SmartApp" page, fill out mandatory "Name" and "Description"
-fields (it does not matter what you put there).
-3. Make sure to enable OAuth in the application settings.
-4. Click the "Create" button at the bottom.
-5. When a new app template opens in the IDE, click on the "Browse SmartApps"
-drop-down list in the upper right corner and select "Browse Shared SmartApps".
-A list of shared SmartApps will appear on the left side of the editor window.
-6. Scroll down to "Safety & Security" section and click on it.
-7. Select "Smart Alarm" app from the list and click the red "Overwrite" button
-in the bottom right corner.
-8. Click the blue "Save" button above the editor window.
-9. Click the "Publish" button next to it and select "For Me". You have now
-self-published your SmartApp.
-10. Open SmartThings mobile app on iPhone or Android and go to the Dashboard.
-11. Tap on the round "+" button and navigate to "My Apps" section by swiping
+1. Open [SmartThings IDE](https://graph.api.smartthings.com) in your web
+browser and log into your account.
+2. Click on "My SmartApps" in the navigation bar at the top of the screen.
+3. Click the green "+ New SmartApp" button on the right.
+4. On the "New SmartApp" page, click the "From Code" tab.
+5. In another browser window, open the Smart Alarm
+[source code](https://raw.githubusercontent.com/statusbits/smartalarm/master/SmartAlarm.groovy)
+6. Copy the Smart Alarm source and paste it into the new app editor window
+(see Step 4).
+7. Click the blue "Create" button at the button of the page. This will take
+you back to the SmartThings IDE.
+8. Click the "Publish button" above the IDE editor window and select "For Me"
+in the drop-down list.
+9. If you plan to use REST API, click the "App Settings" button above the IDE
+editor window. Otherwise skip to the Step 12.
+10. In the app settings window, scroll down and click on the "OAuth" section,
+then click the "Enable OAuth in SmartApp" button.
+11. Click the blue "Update" button at the bottom of the page.
+12. Open SmartThings mobile app on iPhone or Android and go to the Dashboard.
+13. Tap on the round "+" button and navigate to "My Apps" section by swiping
 the menu ribbon all the way to the left.
-12. "Smart Alarm" app should be available in the list of SmartApps that
-appears below the menu ribbon. Tap it and follow setup instructions.
+14. Locate "Smart Alarm" in the list of SmartApps that appears below the menu
+ribbon and tap to install it.
 
 
 ### Revision History
