@@ -1,7 +1,7 @@
 ## Smart Alarm
 
-Smart Alarm is a versatile and highly configurable home security application
-for the [SmartThings](http://fbuy.me/bb9pe) home automation system.
+Smart Alarm is a versatile home security application for the
+[SmartThings](http://fbuy.me/bb9pe) home automation system.
 
 *You can contribute to the development of this app by making donation via PayPal.*
 
@@ -10,41 +10,37 @@ for the [SmartThings](http://fbuy.me/bb9pe) home automation system.
 ### Features
 
 * Two arming modes - Away and Stay.
-* Unlimited number of security zones (sensors) - contact, motion, moisture
-or smoke.
-* Each security zone can be designated as Exterior (armed in both Away and
-Stay modes), Interior (armed in Away mode only), Entrance (same as Exterior,
-but uses entry and exit delays) or Alert (always armed).
-* Optional entry and exit delays for the Entrance zones.
-* Zone bypass allows quickly exclude selected zones.
-* When an alarm is set off, Smart Alarm can turn on sirens and switches as
-well as execute chosen 'Hello, Home' action.
+* Unlimited number of security zones (sensors) - contact, motion, movement
+(acceleration), moisture or smoke.
+* Each security zone can be configured as Exterior (armed in both Away and
+Stay modes), Interior (armed in Away mode only), Alert (always armed) or
+Bypass (never armed).
+* Entry and exit delays in both Stay and Away zones. Delays can be optionally
+disabled for each zone.
+* When an armed security zone is tripped, Smart Alarm can turn on sirens and
+switches as well as execute chosen 'Hello, Home' action.
 * Smart Alarm can send you push notifications and text messages when it's
 armed, disarmed or when an alarm is triggered.
-* Voice notifications are available with compatible audio devices, e.g.
-[VLC Thing](https://github.com/statusbits/smartthings/tree/master/vlc_thing)
-* Silent mode disables sirens and switches, but leaves push notifications
-and text messages on.
+* Voice notifications using compatible audio devices, e.g. Sonos.
 
 
 ### Arming and Disarming
 
-Smart Alarm can be armed and disarmed in several different ways:
+Smart Alarm can be armed and disarmed in three different ways:
 
-1. By assigning home *Modes*. For example, you can configure Smart Alarm to
-arm in Away mode when the home Mode is set to 'Away', to arm in Stay mode when
-the home Mode is set to 'Night' and to disarm when the home Mode is set to
-'Home'. Using home Mode to arm and disarm Smart Alarm is a very flexible and
-powerful technique because home modes can be changed by other Smart Apps and
-'Hello, Home' actions (also known as *phrases*). For example, 'Good Night!'
-action activates the 'Night' mode, thus automatically arming Smart Alarm in
-Stay mode.
+1. Using home *Modes*. For example, you can configure Smart Alarm to arm in
+Away mode when the home Mode is set to 'Away', to arm in Stay mode when the
+home Mode is set to 'Night' and to disarm when the home Mode is set to 'Home'.
+Using home Modes to arm and disarm Smart Alarm is a very flexible and powerful
+technique because the modes can be changed by other Smart Apps and 'Hello,
+Home' actions (also known as *phrases*). For example, 'Good Night!' action
+activates the 'Night' mode, thus automatically arming Smart Alarm in Stay
+mode.
 2. Using a remote control, such as
 [Aeon Labs Minimote](http://www.amazon.com/Aeon-Labs-DSA03202-v1-Minimote/dp/B00KU7ERAW)
-3. Using REST API endpoints. Smart Alarm provides REST endpoints to allow any
-web client to arm, disarm and trigger panic alarm using HTTP GET request. This
-feature can be used to integrate Smart Alarm into variety of Web dashboards
-and remote control web apps.
+3. Using REST API endpoints. Smart Alarm provides REST APIs to arm, disarm
+and trigger panic alarm using HTTP GET request. This feature can be used to
+integrate Smart Alarm into variety of web apps and dashboards.
 
 
 ### Screenshots
@@ -54,10 +50,8 @@ Coming soon....
 
 ### Using REST API
 
-Smart Alarm provides REST API endpoints to allow any web client to arm, disarm
-and trigger panic alarm using HTTP GET request. This feature can be used to
-integrate Smart Alarm into variety of Web dashboards and remote control web
-apps.
+Smart Alarm provides the following REST API endpointss to arm, disarm and
+trigger panic alarm using HTTP GET request.
 
     BASE_URL/armaway  - Arms Smart Alarm in Away node
     BASE_URL/armstay  - Arms Smart Alarm in Stay mode
@@ -65,8 +59,12 @@ apps.
     BASE_URL/panic    - Triggers panic alarm
     BASE_URL/status   - Returns current status
 
-The BASE_URL is https://graph.api.smartthings.com/api/smartapps/installations/APP_ID,
+The *BASE_URL* is https://graph.api.smartthings.com/api/smartapps/installations/APP_ID,
 where APP_ID is the installed Smart App ID.
+
+Please note that the REST API is disable by default. You can enable it using
+Smart Alarm *REST API Options* menu. Before enabling the REST API, please make
+sure that OAuth is enabled in the smart app settings in the IDE.
 
 The REST API requires Access Token. You can obtain the access token using
 SmartThings OAuth2 work flow, however as a convenience, Smart Alarm creates
@@ -77,10 +75,10 @@ Go to [My Locations](https://graph.api.smartthings.com/location/list) and
 click on the "smartapps" link for your Location. Then find "Smart Alarm" in
 the list of Installed SmartApps. Right-click on the "Smart Alarm" and select
 "Open Link in New Window". Scroll down to the "Application State" section.
-There you'll see "accessToken" and "restEndpoint". Save those values and
-plug them in into your web app. 
+There you'll see "accessToken" and "url". Save those values and plug them in
+into your web app.
 
- 
+
 ### Installation
 
 Smart Alarm app is available in the "Safety & Security" section of the Shared
@@ -109,6 +107,18 @@ appears below the menu ribbon. Tap it and follow setup instructions.
 
 
 ### Revision History
+
+**Version 2.4.0. Released 2015-05-30**
+* Added movement (acceleration) sensors.
+* Improved remote control button handling (Issues #25 and #27). Button numbers
+are no longer limited to 1..4. You can also use both "Push" and "Hold" button
+actions.
+* Support "strobe" alarm mode (Issue #28). Alarms can now be turned on in
+"siren", "strobe" or "both" modes.
+* Added Sonos support (Issue #30). Smart Alarm now uses "Audio Player" device
+type instead of "Speech Synthesis" for voice notifications.
+* "Entrance" zones are no longer used. Instead, entry and exit delays can now
+be disabled for each individual zone.
 
 **Version 2.2.5. Released 2015-01-03**
 * Take camera snapshots when alarm is triggered.
