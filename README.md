@@ -12,7 +12,7 @@ for the [SmartThings](http://fbuy.me/bb9pe) home automation system.
 * Two arming modes - Away and Stay.
 * Unlimited number of security zones (sensors) - contact, motion, movement
 (acceleration), moisture or smoke.
-* Each security zone can be designated as Exterior (armed in both Away and
+* Each security zone can be configured as Exterior (armed in both Away and
 Stay modes), Interior (armed in Away mode only), Alert (always armed) or
 Bypass (never armed).
 * Entry and exit delays in both Stay and Away zones. Delays can be optionally
@@ -31,17 +31,16 @@ Smart Alarm can be armed and disarmed in three different ways:
 1. Using home *Modes*. For example, you can configure Smart Alarm to arm in
 Away mode when the home Mode is set to 'Away', to arm in Stay mode when the
 home Mode is set to 'Night' and to disarm when the home Mode is set to 'Home'.
-Using home Mode to arm and disarm Smart Alarm is a very flexible and powerful
-technique because home modes can be changed by other Smart Apps and 'Hello,
+Using home Modes to arm and disarm Smart Alarm is a very flexible and powerful
+technique because the modes can be changed by other Smart Apps and 'Hello,
 Home' actions (also known as *phrases*). For example, 'Good Night!' action
 activates the 'Night' mode, thus automatically arming Smart Alarm in Stay
 mode.
 2. Using a remote control, such as
 [Aeon Labs Minimote](http://www.amazon.com/Aeon-Labs-DSA03202-v1-Minimote/dp/B00KU7ERAW)
-3. Using REST API endpoints. Smart Alarm provides REST endpoints to allow any
-web client to arm, disarm and trigger panic alarm using HTTP GET request. This
-feature can be used to integrate Smart Alarm into variety of Web dashboards
-and remote control web apps.
+3. Using REST API endpoints. Smart Alarm provides REST APIs to arm, disarm
+and trigger panic alarm using HTTP GET request. This feature can be used to
+integrate Smart Alarm into variety of web apps and dashboards.
 
 
 ### Screenshots
@@ -51,10 +50,8 @@ Coming soon....
 
 ### Using REST API
 
-Smart Alarm provides REST API endpoints to allow any web client to arm, disarm
-and trigger panic alarm using HTTP GET request. This feature can be used to
-integrate Smart Alarm into variety of Web dashboards and remote control web
-apps.
+Smart Alarm provides the following REST API endpointss to arm, disarm and
+trigger panic alarm using HTTP GET request.
 
     BASE_URL/armaway  - Arms Smart Alarm in Away node
     BASE_URL/armstay  - Arms Smart Alarm in Stay mode
@@ -62,8 +59,12 @@ apps.
     BASE_URL/panic    - Triggers panic alarm
     BASE_URL/status   - Returns current status
 
-The BASE_URL is https://graph.api.smartthings.com/api/smartapps/installations/APP_ID,
+The *BASE_URL* is https://graph.api.smartthings.com/api/smartapps/installations/APP_ID,
 where APP_ID is the installed Smart App ID.
+
+Please note that the REST API is disable by default. You can enable it using
+Smart Alarm *REST API Options* menu. Before enabling the REST API, please make
+sure that OAuth is enabled in the smart app settings in the IDE.
 
 The REST API requires Access Token. You can obtain the access token using
 SmartThings OAuth2 work flow, however as a convenience, Smart Alarm creates
@@ -77,7 +78,7 @@ the list of Installed SmartApps. Right-click on the "Smart Alarm" and select
 There you'll see "accessToken" and "url". Save those values and plug them in
 into your web app.
 
- 
+
 ### Installation
 
 Smart Alarm app is available in the "Safety & Security" section of the Shared
