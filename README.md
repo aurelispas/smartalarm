@@ -1,7 +1,7 @@
 ## Smart Alarm
 
-Smart Alarm is a versatile and highly configurable home security application
-for the [SmartThings](http://fbuy.me/bb9pe) home automation system.
+Smart Alarm is a versatile home security application for the
+[SmartThings](http://fbuy.me/bb9pe) home automation system.
 
 *You can contribute to the development of this app by making donation via PayPal.*
 
@@ -108,7 +108,7 @@ appears below the menu ribbon. Tap it and follow setup instructions.
 
 ### Revision History
 
-**Version 2.4.0. Released 2015-05-18**
+**Version 2.4.0. Released 2015-05-30**
 * Added movement (acceleration) sensors.
 * Improved remote control button handling (Issues #25 and #27). Button numbers
 are no longer limited to 1..4. You can also use both "Push" and "Hold" button

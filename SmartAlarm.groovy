@@ -1,11 +1,10 @@
 /**
- *  Smart Alarm is a versatile and highly configurable home security
- *  application for SmartThings.
+ *  Smart Alarm is a versatile home security application for SmartThings.
  *
  *  Please visit <http://statusbits.github.io/smartalarm/> for more
  *  information.
  *
- *  Version 2.3.3 (5/16/2015)
+ *  Version 2.4.0 (5/30/2015)
  *
  *  The latest version of this file can be found on GitHub at:
  *  <https://github.com/statusbits/smartalarm/blob/master/SmartAlarm.groovy>
@@ -34,7 +33,7 @@ definition(
     name: "Smart Alarm",
     namespace: "statusbits",
     author: "geko@statusbits.com",
-    description: "The ultimate home security application for SmartThings.",
+    description: "Verstile home security application for SmartThings.",
     category: "Safety & Security",
     iconUrl: "http://statusbits.github.io/icons/SmartAlarm-128.png",
     iconX2Url: "http://statusbits.github.io/icons/SmartAlarm-256.png",
@@ -1896,7 +1895,7 @@ private def mySendPush(msg) {
 }
 
 private def getVersion() {
-    return "2.3.3"
+    return "2.4.0"
 }
 
 private def textCopyright() {
@@ -1918,9 +1917,9 @@ private def textLicense() {
 }
 
 private def LOG(message) {
-    log.trace message
+    //log.trace message
 }
 
 private def STATE() {
-    log.trace "state: ${state}"
+    //log.trace "state: ${state}"
 }
