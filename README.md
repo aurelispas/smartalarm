@@ -17,26 +17,25 @@ Stay modes), Interior (armed in Away mode only), Alert (always armed) or
 Bypass (never armed).
 * Entry and exit delays in both Stay and Away zones. Delays can be optionally
 disabled for each zone.
-* When an alarm is set off, Smart Alarm can turn on sirens and switches as
-well as execute chosen 'Hello, Home' action.
+* When an armed security zone is tripped, Smart Alarm can turn on sirens and
+switches as well as execute chosen 'Hello, Home' action.
 * Smart Alarm can send you push notifications and text messages when it's
 armed, disarmed or when an alarm is triggered.
-* Voice notifications are available with compatible audio devices, e.g.
-[VLC Thing](https://github.com/statusbits/smartthings/tree/master/vlc_thing)
+* Voice notifications using compatible audio devices, e.g. Sonos.
 
 
 ### Arming and Disarming
 
-Smart Alarm can be armed and disarmed in several different ways:
+Smart Alarm can be armed and disarmed in three different ways:
 
-1. By assigning home *Modes*. For example, you can configure Smart Alarm to
-arm in Away mode when the home Mode is set to 'Away', to arm in Stay mode when
-the home Mode is set to 'Night' and to disarm when the home Mode is set to
-'Home'. Using home Mode to arm and disarm Smart Alarm is a very flexible and
-powerful technique because home modes can be changed by other Smart Apps and
-'Hello, Home' actions (also known as *phrases*). For example, 'Good Night!'
-action activates the 'Night' mode, thus automatically arming Smart Alarm in
-Stay mode.
+1. Using home *Modes*. For example, you can configure Smart Alarm to arm in
+Away mode when the home Mode is set to 'Away', to arm in Stay mode when the
+home Mode is set to 'Night' and to disarm when the home Mode is set to 'Home'.
+Using home Mode to arm and disarm Smart Alarm is a very flexible and powerful
+technique because home modes can be changed by other Smart Apps and 'Hello,
+Home' actions (also known as *phrases*). For example, 'Good Night!' action
+activates the 'Night' mode, thus automatically arming Smart Alarm in Stay
+mode.
 2. Using a remote control, such as
 [Aeon Labs Minimote](http://www.amazon.com/Aeon-Labs-DSA03202-v1-Minimote/dp/B00KU7ERAW)
 3. Using REST API endpoints. Smart Alarm provides REST endpoints to allow any
@@ -75,8 +74,8 @@ Go to [My Locations](https://graph.api.smartthings.com/location/list) and
 click on the "smartapps" link for your Location. Then find "Smart Alarm" in
 the list of Installed SmartApps. Right-click on the "Smart Alarm" and select
 "Open Link in New Window". Scroll down to the "Application State" section.
-There you'll see "accessToken" and "restEndpoint". Save those values and
-plug them in into your web app. 
+There you'll see "accessToken" and "url". Save those values and plug them in
+into your web app.
 
  
 ### Installation
