@@ -87,15 +87,15 @@ browser and log into your account.
 3. Click the green "+ New SmartApp" button on the right.
 4. On the "New SmartApp" page, click the "From Code" tab.
 5. In another browser window, open the Smart Alarm
-[source code](https://raw.githubusercontent.com/statusbits/smartalarm/master/SmartAlarm.groovy)
+[source code](https://raw.githubusercontent.com/statusbits/smartalarm/master/SmartAlarm.groovy).
 6. Copy the Smart Alarm source and paste it into the new app editor window
 (see Step 4).
 7. Click the blue "Create" button at the button of the page. This will take
 you back to the SmartThings IDE.
-8. Click the "Publish button" above the IDE editor window and select "For Me"
+8. Click the "Publish" button above the IDE editor window and select "For Me"
 in the drop-down list.
-9. If you plan to use REST API, click the "App Settings" button above the IDE
-editor window. Otherwise skip to the Step 12.
+9. If you intend to use SmartAlarm REST API, click the "App Settings" button
+above the IDE editor window. Otherwise skip to the Step 12.
 10. In the app settings window, scroll down and click on the "OAuth" section,
 then click the "Enable OAuth in SmartApp" button.
 11. Click the blue "Update" button at the bottom of the page.
