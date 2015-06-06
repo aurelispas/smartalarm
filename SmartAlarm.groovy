@@ -4,7 +4,7 @@
  *  Please visit <http://statusbits.github.io/smartalarm/> for more
  *  information.
  *
- *  Version 2.4.0 (5/30/2015)
+ *  Version 2.4.1 (6/6/2015)
  *
  *  The latest version of this file can be found on GitHub at:
  *  <https://github.com/statusbits/smartalarm/blob/master/SmartAlarm.groovy>
@@ -33,7 +33,7 @@ definition(
     name: "Smart Alarm",
     namespace: "statusbits",
     author: "geko@statusbits.com",
-    description: "Verstile home security application for SmartThings. Version 2.4.0.",
+    description: "Versatile home security application for SmartThings (Version 2.4.1)",
     category: "Safety & Security",
     iconUrl: "http://statusbits.github.io/icons/SmartAlarm-128.png",
     iconX2Url: "http://statusbits.github.io/icons/SmartAlarm-256.png",
@@ -395,21 +395,24 @@ def pageConfigureZones() {
         if (settings.z_contact) {
             def devices = settings.z_contact.sort {it.displayName}
             devices.each() {
+
+                def typeVar = "type_${it.id}"
                 def inputZoneType = [
-                    name:       "type_${it.id}",
+                    name:       typeVar,
                     type:       "enum",
                     title:      "Zone Type",
                     metadata:   [values: zoneTypes],
-                    defaultValue: "exterior",
-                    required:   true
+                    //defaultValue: "exterior",
+                    //required:   true
                 ]
 
+                def delayVar = "delay_${it.id}"
                 def inputZoneDelay = [
-                    name:       "delay_${it.id}",
+                    name:       delayVar,
                     type:       "bool",
                     title:      "Entry/Exit Delays",
-                    defaultValue: "true",
-                    required:   true
+                    //defaultValue: "true",
+                    //required:   true
                 ]
 
                 section("${it.displayName} (contact)") {
@@ -1895,7 +1898,7 @@ private def mySendPush(msg) {
 }
 
 private def getVersion() {
-    return "2.4.0"
+    return "2.4.1"
 }
 
 private def textCopyright() {
@@ -1917,9 +1920,9 @@ private def textLicense() {
 }
 
 private def LOG(message) {
-    //log.trace message
+    log.trace message
 }
 
 private def STATE() {
-    //log.trace "state: ${state}"
+    log.trace "state: ${state}"
 }
