@@ -395,29 +395,10 @@ def pageConfigureZones() {
         if (settings.z_contact) {
             def devices = settings.z_contact.sort {it.displayName}
             devices.each() {
-
-                def typeVar = "type_${it.id}"
-                def inputZoneType = [
-                    name:       typeVar,
-                    type:       "enum",
-                    title:      "Zone Type",
-                    metadata:   [values: zoneTypes],
-                    //defaultValue: "exterior",
-                    //required:   true
-                ]
-
-                def delayVar = "delay_${it.id}"
-                def inputZoneDelay = [
-                    name:       delayVar,
-                    type:       "bool",
-                    title:      "Entry/Exit Delays",
-                    //defaultValue: "true",
-                    //required:   true
-                ]
-
+                def devId = it.id
                 section("${it.displayName} (contact)") {
-                    input inputZoneType
-                    input inputZoneDelay
+                    input "type_${devId}", "enum", title:"Zone Type", metadata:[values:zoneTypes], defaultValue:"exterior"
+                    input "delay_${devId}", "bool", title:"Entry/Exit Delays", defaultValue:true
                 }
             }
         }
@@ -425,26 +406,10 @@ def pageConfigureZones() {
         if (settings.z_motion) {
             def devices = settings.z_motion.sort {it.displayName}
             devices.each() {
-                def inputZoneType = [
-                    name:       "type_${it.id}",
-                    type:       "enum",
-                    title:      "Zone Type",
-                    metadata:   [values: zoneTypes],
-                    defaultValue: "interior",
-                    required:   true
-                ]
-
-                def inputZoneDelay = [
-                    name:       "delay_${it.id}",
-                    type:       "bool",
-                    title:      "Entry/Exit Delays",
-                    defaultValue: "true",
-                    required:   true
-                ]
-
+                def devId = it.id
                 section("${it.displayName} (motion)") {
-                    input inputZoneType
-                    input inputZoneDelay
+                    input "type_${devId}", "enum", title:"Zone Type", metadata:[values:zoneTypes], defaultValue:"interior"
+                    input "delay_${devId}", "bool", title:"Entry/Exit Delays", defaultValue:false
                 }
             }
         }
@@ -452,26 +417,10 @@ def pageConfigureZones() {
         if (settings.z_movement) {
             def devices = settings.z_movement.sort {it.displayName}
             devices.each() {
-                def inputZoneType = [
-                    name:       "type_${it.id}",
-                    type:       "enum",
-                    title:      "Zone Type",
-                    metadata:   [values: zoneTypes],
-                    defaultValue: "interior",
-                    required:   true
-                ]
-
-                def inputZoneDelay = [
-                    name:       "delay_${it.id}",
-                    type:       "bool",
-                    title:      "Entry/Exit Delays",
-                    defaultValue: "true",
-                    required:   true
-                ]
-
+                def devId = it.id
                 section("${it.displayName} (movement)") {
-                    input inputZoneType
-                    input inputZoneDelay
+                    input "type_${devId}", "enum", title:"Zone Type", metadata:[values:zoneTypes], defaultValue:"interior"
+                    input "delay_${devId}", "bool", title:"Entry/Exit Delays", defaultValue:false
                 }
             }
         }
@@ -479,26 +428,10 @@ def pageConfigureZones() {
         if (settings.z_smoke) {
             def devices = settings.z_smoke.sort {it.displayName}
             devices.each() {
-                def inputZoneType = [
-                    name:       "type_${it.id}",
-                    type:       "enum",
-                    title:      "Zone Type",
-                    metadata:   [values: zoneTypes],
-                    defaultValue: "alert",
-                    required:   true
-                ]
-
-                def inputZoneDelay = [
-                    name:       "delay_${it.id}",
-                    type:       "bool",
-                    title:      "Entry/Exit Delays",
-                    defaultValue: "false",
-                    required:   true
-                ]
-
+                def devId = it.id
                 section("${it.displayName} (smoke)") {
-                    input inputZoneType
-                    input inputZoneDelay
+                    input "type_${devId}", "enum", title:"Zone Type", metadata:[values:zoneTypes], defaultValue:"alert"
+                    input "delay_${devId}", "bool", title:"Entry/Exit Delays", defaultValue:false
                 }
             }
         }
@@ -506,26 +439,10 @@ def pageConfigureZones() {
         if (settings.z_water) {
             def devices = settings.z_water.sort {it.displayName}
             devices.each() {
-                def inputZoneType = [
-                    name:       "type_${it.id}",
-                    type:       "enum",
-                    title:      "Zone Type",
-                    metadata:   [values: zoneTypes],
-                    defaultValue: "alert",
-                    required:   true
-                ]
-
-                def inputZoneDelay = [
-                    name:       "delay_${it.id}",
-                    type:       "bool",
-                    title:      "Entry/Exit Delays",
-                    defaultValue: "false",
-                    required:   true
-                ]
-
+                def devId = it.id
                 section("${it.displayName} (moisture)") {
-                    input inputZoneType
-                    input inputZoneDelay
+                    input "type_${devId}", "enum", title:"Zone Type", metadata:[values:zoneTypes], defaultValue:"alert"
+                    input "delay_${devId}", "bool", title:"Entry/Exit Delays", defaultValue:false
                 }
             }
         }
@@ -1920,9 +1837,9 @@ private def textLicense() {
 }
 
 private def LOG(message) {
-    log.trace message
+    //log.trace message
 }
 
 private def STATE() {
-    log.trace "state: ${state}"
+    //log.trace "state: ${state}"
 }
