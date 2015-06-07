@@ -108,6 +108,9 @@ ribbon and tap to install it.
 
 ### Revision History
 
+**Version 2.4.1. Released 2015-06-06**
+* Fixed Issue #39 - Smart Alarm not saving zone configuration.
+
 **Version 2.4.0. Released 2015-05-30**
 * Added movement (acceleration) sensors.
 * Improved remote control button handling (Issues #25 and #27). Button numbers
